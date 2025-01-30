@@ -10,8 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 @RestController
 public class ActorController {
@@ -64,16 +67,50 @@ public class ActorController {
         return ActorOutput.from(savedActor);
     }
 
-    @PutMapping("/actors/{id}")
-    public String updateActor(@PathVariable Short id){
-        return "update an actor";
+    @PatchMapping("/actors/{id}")
+    public ActorOutput updateActor(@PathVariable Short id, @RequestBody ActorInput input){
 
-        //change to patch
+        final var actor = actorRepository
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Actor not found"
+        ));
+
+
+        //can add not empty for validation later
+        if (input.getFirstName() != null){
+            actor.setFirstName(input.getFirstName().toUpperCase());
+        }
+
+        if (input.getLastName() != null){
+            actor.setLastName(input.getLastName().toUpperCase());
+        }
+
+        if (input.getFilms() != null){
+            final var films = input.getFilms().stream()
+                    .map(filmId -> filmRepository
+                            .findById(filmId)
+                            .orElseThrow(() -> new ResponseStatusException(
+                                    HttpStatus.BAD_REQUEST,
+                                    String.format("A film with the id %d does not exist", filmId)
+                            )))
+                    .collect(Collectors.toCollection(ArrayList::new));
+            //collect takes all items from stream
+            //the collector is the argument which implements set of functions which adds to some collection
+            //collection is generic parent datatype which has lists, hashmaps, etc
+            //new empty array list added
+            actor.setFilms(films);
+        }
+
+        final var updatedActor = actorRepository.save(actor);
+        return ActorOutput.from(updatedActor);
+
     }
 
-    @DeleteMapping("/actors/{id}")
-    public String deleteActor(@PathVariable Short id){
-        return"delete actor by id ";
-    }
+//    @DeleteMapping("/actors/{id}")
+//    public String deleteActor(@PathVariable Short id){
+//        return"delete actor by id ";
+//    }
 
 }
