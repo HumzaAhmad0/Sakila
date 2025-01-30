@@ -67,6 +67,31 @@ public class ActorController {
         return ActorOutput.from(savedActor);
     }
 
+    @PutMapping("/actors/{id}")
+    public ActorOutput replaceActor(@PathVariable short id, @RequestBody ActorInput input){
+        final var actor = actorRepository
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Actor not found"
+                ));
+
+        actor.setFirstName(input.getFirstName().toUpperCase());
+        actor.setLastName(input.getLastName().toUpperCase());
+        final var films = input.getFilms().stream()
+                .map(filmId -> filmRepository
+                        .findById(filmId)
+                        .orElseThrow(() -> new ResponseStatusException(
+                                HttpStatus.BAD_REQUEST,
+                                String.format("A film with the id %d does not exist", filmId)
+                        )))
+                .collect(Collectors.toCollection(ArrayList::new));
+        actor.setFilms(films);
+
+        final var updatedActor = actorRepository.save(actor);
+        return ActorOutput.from(updatedActor);
+    }
+
     @PatchMapping("/actors/{id}")
     public ActorOutput updateActor(@PathVariable Short id, @RequestBody ActorInput input){
 
