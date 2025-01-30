@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class FilmController {
@@ -77,6 +79,57 @@ public class FilmController {
 
         final var savedFilms = filmRepository.save(film);
         return FilmOutput.from(savedFilms);
+    }
+
+    @PatchMapping("/films/{id}")
+    public FilmOutput editFilm(@PathVariable Short id, @RequestBody FilmInput input){
+        final var film = filmRepository
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Film not found"
+                ));
+        if (input.getTitle() != null){
+            film.setTitle(input.getTitle());
+        }
+        if (input.getDescription() != null){
+            film.setDescription(input.getDescription());
+        }
+        if (input.getReleaseYear() != null){
+            film.setReleaseYear(input.getReleaseYear());
+        }
+        if (input.getLanguage() != null){
+            final var movieLanguage = languageRepository
+                    .findById(input.getLanguage())
+                    .orElseThrow(()-> new ResponseStatusException(
+                            HttpStatus.BAD_REQUEST,
+                            String.format("A language with the id %d does not exist", input.getLanguage())
+                    ));
+
+            film.setLanguage(movieLanguage);
+        }
+        if (input.getMovieLength() != null){
+            film.setMovieLength(input.getMovieLength());
+        }
+        if (input.getRating() != null){
+            film.setRating(input.getRating());
+        }
+        if (input.getActors() != null){
+            final var actors = input.getActors()
+                    .stream()
+                    .map(actorId -> actorRepository
+                            .findById(actorId)
+                            .orElseThrow(() -> new ResponseStatusException(
+                                    HttpStatus.BAD_REQUEST,
+                                    String.format("A film with the id %d does not exist", actorId)
+                            )))
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            film.setCast(actors);
+        }
+
+        var updatedFilm = filmRepository.save(film);
+        return FilmOutput.from(updatedFilm);
     }
 
     @DeleteMapping("films/{id}")

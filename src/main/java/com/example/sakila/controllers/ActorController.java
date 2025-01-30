@@ -108,9 +108,16 @@ public class ActorController {
 
     }
 
-//    @DeleteMapping("/actors/{id}")
-//    public String deleteActor(@PathVariable Short id){
-//        return"delete actor by id ";
-//    }
+    @DeleteMapping("actors/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteActor(@PathVariable Short id){
+        if (!actorRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Actor not found");
+        }
+
+        actorRepository.deleteById(id);
+    }
+
+
 
 }
