@@ -2,9 +2,6 @@ package com.example.sakila.dto.output;
 
 import com.example.sakila.entities.Film;
 import com.example.sakila.entities.Language;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -20,7 +17,7 @@ public class FilmOutput {
     private String description;
     private Year releaseYear;
     private Language language;
-    private Short movieLength;
+    private Byte movieLength;
     private String rating;
     private List<PartialActorOutput> cast;
 

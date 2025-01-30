@@ -1,8 +1,10 @@
 package com.example.sakila.controllers;
 
+import com.example.sakila.dto.input.ActorInput;
 import com.example.sakila.dto.output.ActorOutput;
 import com.example.sakila.entities.Actor;
 import com.example.sakila.repositories.ActorRepository;
+import com.example.sakila.repositories.FilmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +17,12 @@ import java.util.Optional;
 public class ActorController {
 
     private ActorRepository actorRepository;
+    private FilmRepository filmRepository;
 
     @Autowired
-    public ActorController(ActorRepository actorRepository){
+    public ActorController(ActorRepository actorRepository, FilmRepository filmRepository){
         this.actorRepository = actorRepository;
+        this.filmRepository = filmRepository;
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -40,8 +44,24 @@ public class ActorController {
     }
 
     @PostMapping("/actors")
-    public String newActor(){
-        return "create new actor";
+    public ActorOutput newActor(@RequestBody ActorInput input){
+        final var actor = new Actor();
+        actor.setFirstName(input.getFirstName().toUpperCase());
+        actor.setLastName(input.getLastName().toUpperCase());
+
+        final var films = input.getFilms()
+                .stream()
+                .map(filmId -> filmRepository
+                        .findById(filmId)
+                        .orElseThrow(() -> new ResponseStatusException(
+                                HttpStatus.BAD_REQUEST,
+                                String.format("A film with the id %d does not exist", filmId)
+                        )))
+                .toList();
+
+        actor.setFilms(films);
+        final var savedActor = actorRepository.save(actor);
+        return ActorOutput.from(savedActor);
     }
 
     @PutMapping("/actors/{id}")

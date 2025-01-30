@@ -1,7 +1,9 @@
 package com.example.sakila.entities;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Year;
 import java.util.List;
@@ -9,10 +11,12 @@ import java.util.List;
 @Entity
 @Table(name = "film")
 @Getter
+@Setter
 public class Film {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "film_id")
+    @Setter(AccessLevel.NONE)
     private Short id;
 
     @Column(name = "title")
@@ -29,7 +33,7 @@ public class Film {
     private Language language;
 
     @Column(name = "length")
-    private Short movieLength;
+    private Byte movieLength;
 
     //@Enumerated(EnumType.STRING)
     @Column(name = "rating")
