@@ -81,6 +81,44 @@ public class FilmController {
         return FilmOutput.from(savedFilms);
     }
 
+    @PutMapping("/films/{id}")
+    public FilmOutput replaceFilm(@PathVariable Short id, @RequestBody FilmInput input){
+        final var film = filmRepository
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Film not found"
+                ));
+
+        film.setTitle(input.getTitle());
+        film.setDescription(input.getDescription());
+        film.setReleaseYear(input.getReleaseYear());
+        final var movieLanguage = languageRepository
+                .findById(input.getLanguage())
+                .orElseThrow(()-> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        String.format("A language with the id %d does not exist", input.getLanguage())
+                ));
+
+        film.setLanguage(movieLanguage);
+        film.setMovieLength(input.getMovieLength());
+        film.setRating(input.getRating());
+        final var actors = input.getActors()
+                .stream()
+                .map(actorId -> actorRepository
+                        .findById(actorId)
+                        .orElseThrow(() -> new ResponseStatusException(
+                                HttpStatus.BAD_REQUEST,
+                                String.format("A film with the id %d does not exist", actorId)
+                        )))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        film.setCast(actors);
+
+        var updatedFilm = filmRepository.save(film);
+        return FilmOutput.from(updatedFilm);
+    }
+
     @PatchMapping("/films/{id}")
     public FilmOutput editFilm(@PathVariable Short id, @RequestBody FilmInput input){
         final var film = filmRepository
@@ -132,7 +170,7 @@ public class FilmController {
         return FilmOutput.from(updatedFilm);
     }
 
-    @DeleteMapping("films/{id}")
+    @DeleteMapping("/films/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFilm(@PathVariable Short id){
         if (!filmRepository.existsById(id)) {

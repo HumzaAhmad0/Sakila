@@ -133,7 +133,7 @@ public class ActorController {
 
     }
 
-    @DeleteMapping("actors/{id}")
+    @DeleteMapping("/actors/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteActor(@PathVariable Short id){
         if (!actorRepository.existsById(id)) {
