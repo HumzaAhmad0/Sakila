@@ -47,12 +47,8 @@ public class Film {
     )
     private List<Actor> cast;
 
-//    @ManyToOne
-//    @JoinTable(
-//            name = "film_category",
-//            joinColumns = {@JoinColumn(name = "film_id")},
-//            inverseJoinColumns = {@JoinColumn(name = "film_id")}
-//    )
-//    private List<FilmCategory> categoriesOfFilm;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category genre;
 
 }
