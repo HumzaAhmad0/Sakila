@@ -1,39 +1,34 @@
 package com.example.sakila.controllers;
 
+import com.example.sakila.dto.ValidationGroup;
 import com.example.sakila.dto.input.ActorInput;
 import com.example.sakila.dto.output.ActorOutput;
-import com.example.sakila.entities.Actor;
-import com.example.sakila.repositories.ActorRepository;
-import com.example.sakila.repositories.FilmRepository;
+import com.example.sakila.services.ActorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.ArrayList;
 
 @RestController
 public class ActorController {
 
-    private ActorRepository actorRepository;
-    private FilmRepository filmRepository;
+    private final ActorService actorService;
 
     @Autowired
-    public ActorController(ActorRepository actorRepository, FilmRepository filmRepository){
-        this.actorRepository = actorRepository;
-        this.filmRepository = filmRepository;
+    public ActorController(ActorService actorService){
+        this.actorService = actorService;
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @GetMapping ("/actors")
     public List<ActorOutput> getActor(@RequestParam(required = false) Optional<String> name){
         return name
-                .map(value -> actorRepository.findAllByFullNameContainingIgnoreCase(value))
-                .orElseGet(() -> actorRepository.findAll())
+                .map(actorService::listActorsByFullName)
+                .orElseGet(actorService::listActors)
                 .stream()
                 .map(ActorOutput::from)
                 .toList();
@@ -41,108 +36,32 @@ public class ActorController {
 
     @GetMapping("/actors/{id}")
     public ActorOutput getSpecificActor(@PathVariable Short id){
-        return actorRepository.findById(id)
+        return actorService.getActorById(id)
                 .map(ActorOutput::from)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/actors")
-    public ActorOutput newActor(@RequestBody ActorInput input){
-        final var actor = new Actor();
-        actor.setFirstName(input.getFirstName().toUpperCase());
-        actor.setLastName(input.getLastName().toUpperCase());
-
-        final var films = input.getFilms()
-                .stream()
-                .map(filmId -> filmRepository
-                        .findById(filmId)
-                        .orElseThrow(() -> new ResponseStatusException(
-                                HttpStatus.BAD_REQUEST,
-                                String.format("A film with the id %d does not exist", filmId)
-                        )))
-                .toList();
-
-        actor.setFilms(films);
-        final var savedActor = actorRepository.save(actor);
+    public ActorOutput newActor(@Validated(ValidationGroup.Post.class)@RequestBody ActorInput input){
+        final var savedActor = actorService.createActor(input);
         return ActorOutput.from(savedActor);
     }
 
     @PutMapping("/actors/{id}")
-    public ActorOutput replaceActor(@PathVariable short id, @RequestBody ActorInput input){
-        final var actor = actorRepository
-                .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Actor not found"
-                ));
-
-        actor.setFirstName(input.getFirstName().toUpperCase());
-        actor.setLastName(input.getLastName().toUpperCase());
-        final var films = input.getFilms().stream()
-                .map(filmId -> filmRepository
-                        .findById(filmId)
-                        .orElseThrow(() -> new ResponseStatusException(
-                                HttpStatus.BAD_REQUEST,
-                                String.format("A film with the id %d does not exist", filmId)
-                        )))
-                .collect(Collectors.toCollection(ArrayList::new));
-        actor.setFilms(films);
-
-        final var updatedActor = actorRepository.save(actor);
+    public ActorOutput replaceActor(@PathVariable short id, @Validated(ValidationGroup.Put.class)@RequestBody ActorInput input){
+        final var updatedActor = actorService.updateActor(id, input);
         return ActorOutput.from(updatedActor);
     }
 
     @PatchMapping("/actors/{id}")
-    public ActorOutput updateActor(@PathVariable Short id, @RequestBody ActorInput input){
-
-        final var actor = actorRepository
-                .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Actor not found"
-        ));
-
-
-        //can add not empty for validation later
-        if (input.getFirstName() != null){
-            actor.setFirstName(input.getFirstName().toUpperCase());
-        }
-
-        if (input.getLastName() != null){
-            actor.setLastName(input.getLastName().toUpperCase());
-        }
-
-        if (input.getFilms() != null){
-            final var films = input.getFilms().stream()
-                    .map(filmId -> filmRepository
-                            .findById(filmId)
-                            .orElseThrow(() -> new ResponseStatusException(
-                                    HttpStatus.BAD_REQUEST,
-                                    String.format("A film with the id %d does not exist", filmId)
-                            )))
-                    .collect(Collectors.toCollection(ArrayList::new));
-            //collect takes all items from stream
-            //the collector is the argument which implements set of functions which adds to some collection
-            //collection is generic parent datatype which has lists, hashmaps, etc
-            //new empty array list added
-            actor.setFilms(films);
-        }
-
-        final var updatedActor = actorRepository.save(actor);
+    public ActorOutput updateActor(@PathVariable Short id, @Validated(ValidationGroup.Patch.class) @RequestBody ActorInput input){
+        final var updatedActor = actorService.updateActor(id, input);
         return ActorOutput.from(updatedActor);
-
     }
 
     @DeleteMapping("/actors/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteActor(@PathVariable Short id){
-        if (!actorRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Actor not found");
-        }
-
-        actorRepository.deleteById(id);
+        actorService.deleteActor(id);
     }
-
-
-
 }

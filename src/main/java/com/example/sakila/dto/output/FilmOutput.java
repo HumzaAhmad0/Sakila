@@ -17,7 +17,7 @@ public class FilmOutput {
     private String description;
     private Year releaseYear;
     private Language language;
-    private Byte movieLength;
+    private Short movieLength;
     private String rating;
     private List<PartialActorOutput> cast;
 

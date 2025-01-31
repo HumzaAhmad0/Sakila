@@ -30,7 +30,12 @@ public class Actor {
     @Setter(AccessLevel.NONE)
     private String fullName;
 
-    @ManyToMany(mappedBy = "cast")
+    @ManyToMany
+    @JoinTable(
+            name = "film_actor",
+            joinColumns = {@JoinColumn(name = "actor_id")},
+            inverseJoinColumns = {@JoinColumn(name = "film_id")}
+    )
     private List<Film> films;
 
     public String getFullName(){

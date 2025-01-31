@@ -33,7 +33,7 @@ public class Film {
     private Language language;
 
     @Column(name = "length")
-    private Byte movieLength;
+    private Short movieLength;
 
     //@Enumerated(EnumType.STRING)
     @Column(name = "rating")
@@ -46,5 +46,13 @@ public class Film {
             inverseJoinColumns = {@JoinColumn(name = "actor_id")}
     )
     private List<Actor> cast;
+
+//    @ManyToOne
+//    @JoinTable(
+//            name = "film_category",
+//            joinColumns = {@JoinColumn(name = "film_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "film_id")}
+//    )
+//    private List<FilmCategory> categoriesOfFilm;
 
 }
