@@ -19,8 +19,8 @@ public class FilmInput {
     @NotNull(groups = {ValidationGroup.Put.class, ValidationGroup.Post.class})
     //@Positive
     private Byte language;
-
     private Short movieLength;
+
     @Pattern(regexp = "^(G|PG|PG-13|R|NC-17)$")
     private String rating;
     private List<Short> actors;

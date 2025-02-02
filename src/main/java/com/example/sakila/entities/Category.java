@@ -19,11 +19,11 @@ public class Category {
     @Column(name = "name")
     private String name;
 
-    @OneToMany
-    @JoinTable(
-            name = "film_category",
-            joinColumns = @JoinColumn(name = "category_id"),
-            inverseJoinColumns = @JoinColumn(name = "film_id")
-    )
-    private List<Film> films;
+//    @OneToMany
+//    @JoinTable(
+//            name = "film_category",
+//            joinColumns = @JoinColumn(name = "category_id"),
+//            inverseJoinColumns = @JoinColumn(name = "film_id")
+//    )
+//    private List<Film> films;
 }

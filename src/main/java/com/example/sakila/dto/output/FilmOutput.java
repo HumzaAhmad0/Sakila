@@ -36,7 +36,8 @@ public class FilmOutput {
                 film.getCast()
                         .stream()
                         .map(PartialActorOutput::from)
-                        .toList(),
+                        .toList()
+                ,
                 film.getGenre()
         );
     }
