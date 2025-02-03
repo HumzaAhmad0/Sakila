@@ -1,9 +1,6 @@
 package com.example.sakila.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Digits;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -57,7 +54,7 @@ public class Film {
             joinColumns = {@JoinColumn(name = "film_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id")}
     )
-    private List<Category> genre;
+    private List<Category> categories;
 
     @Column(name = "film_score")
     private Float score;

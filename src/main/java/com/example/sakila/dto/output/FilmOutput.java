@@ -1,11 +1,9 @@
 package com.example.sakila.dto.output;
 
-import com.example.sakila.entities.Category;
 import com.example.sakila.entities.Film;
 import com.example.sakila.entities.Language;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.catalina.startup.Catalina;
 
 import java.time.Year;
 import java.util.List;
@@ -41,7 +39,7 @@ public class FilmOutput {
                         .stream()
                         .map(PartialActorOutput::from)
                         .toList(),
-                film.getGenre()
+                film.getCategories()
                         .stream()
                         .map(PartialCategoryOutput::from)
                         .toList(),

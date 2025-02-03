@@ -36,9 +36,9 @@ public class FilmInput {
 
     @NotNull(groups = {ValidationGroup.Put.class, ValidationGroup.Post.class})
     @DecimalMin(value = "0.00", inclusive = true, message = "Rental Rate cannot be below 0.00")
-//    @DecimalMax(value = "100.00", inclusive = true)
+    @DecimalMax(value = "99.99", inclusive = true, message = "Rental Rate cannot be above 0.00")
     // issue with: out of range above 99.99
-    @Digits(integer = 3, fraction = 2, message = "Rental rate can only be 3 digits before the decimal and 2 digits after e.g XXX.YY")
+    @Digits(integer = 2, fraction = 2, message = "Rental rate can only be 3 digits before the decimal and 2 digits after e.g XXX.YY")
     private Float rentalRate;
 
     @NotNull(groups = {ValidationGroup.Put.class, ValidationGroup.Post.class}, message = "Rental Duration cannot be null")

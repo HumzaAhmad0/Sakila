@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,8 +42,43 @@ public class FilmService {
         return filmRepository.findById(id);
     }
 
-    public List<Film> listFilms(){
-        return filmRepository.findAll();
+    public List<Film> listFilms(String title, String categoryName, String rating, Year year){
+        if (title == null && categoryName == null && rating == null && year == null) {
+            return filmRepository.findAll();
+        }
+
+        String filters =
+                (title != null ? "title" : "") +
+                (categoryName != null ? "category" : "") +
+                (rating != null ? "rating" : "") +
+                (year != null ? "year" : "");
+
+        return switch (filters) {
+            case "title" -> filmRepository.findAllByTitleContainingIgnoreCase(title);
+            case "category" -> filmRepository.findAllByCategories_NameContainingIgnoreCase(categoryName);
+            case "rating" -> filmRepository.findAllByRatingContainingIgnoreCase(rating);
+            case "year" -> filmRepository.findAllByReleaseYear(year);
+            case "titlecategory" ->
+                    filmRepository.findAllByTitleContainingIgnoreCaseAndCategories_NameContainingIgnoreCase(title, categoryName);
+            case "titlerating" ->
+                    filmRepository.findAllByTitleContainingIgnoreCaseAndRatingContainingIgnoreCase(title, rating);
+            case "titleyear" -> filmRepository.findAllByTitleContainingIgnoreCaseAndReleaseYear(title, year);
+            case "categoryrating" ->
+                    filmRepository.findAllByCategories_NameContainingIgnoreCaseAndRatingContainingIgnoreCase(categoryName, rating);
+            case "categoryyear" -> filmRepository.findAllByCategories_NameContainingIgnoreCaseAndReleaseYear(categoryName, year);
+            case "ratingyear" -> filmRepository.findAllByRatingContainingIgnoreCaseAndReleaseYear(rating, year);
+            case "titlecategoryrating" ->
+                    filmRepository.findAllByTitleContainingIgnoreCaseAndCategories_NameContainingIgnoreCaseAndRatingContainingIgnoreCase(title, categoryName, rating);
+            case "titlecategoryyear" ->
+                    filmRepository.findAllByTitleContainingIgnoreCaseAndCategories_NameContainingIgnoreCaseAndReleaseYear(title, categoryName, year);
+            case "titleratingyear" ->
+                    filmRepository.findAllByTitleContainingIgnoreCaseAndRatingContainingIgnoreCaseAndReleaseYear(title, rating, year);
+            case "categoryratingyear" ->
+                    filmRepository.findAllByCategories_NameContainingIgnoreCaseAndRatingContainingIgnoreCaseAndReleaseYear(categoryName, rating, year);
+            case "titlecategoryratingyear" ->
+                    filmRepository.findAllByTitleContainingIgnoreCaseAndCategories_NameContainingIgnoreCaseAndRatingContainingIgnoreCaseAndReleaseYear(title, categoryName, rating, year);
+            default -> filmRepository.findAll();
+        };
     }
 
     public Film createFilm(FilmInput input){
@@ -88,7 +124,7 @@ public class FilmService {
 
                     )))
                     .collect(Collectors.toCollection(ArrayList::new));
-            film.setGenre(movieGenre);
+            film.setCategories(movieGenre);
         }
 
         if (input.getActors() != null){
