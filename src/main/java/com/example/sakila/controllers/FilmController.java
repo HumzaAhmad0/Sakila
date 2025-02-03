@@ -5,6 +5,8 @@ import com.example.sakila.dto.input.FilmInput;
 import com.example.sakila.dto.output.FilmOutput;
 import com.example.sakila.services.FilmService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +29,8 @@ public class FilmController {
     public List<FilmOutput> retrieveMovies(@RequestParam(required = false) String title,
                                            @RequestParam(required = false) String categoryName,
                                            @RequestParam(required = false) String rating,
-                                           @RequestParam(required = false) Year year){
+                                           @RequestParam(required = false) Year year
+    ){
         return filmService.listFilms(title,categoryName,rating,year)
                 .stream()
                 .map(FilmOutput::from)

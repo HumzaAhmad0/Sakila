@@ -1,30 +1,30 @@
 package com.example.sakila.repositories;
 
 import com.example.sakila.entities.Film;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.Year;
 import java.util.List;
 
 public interface FilmRepository extends JpaRepository<Film, Short> {
-    List<Film> findAllByTitleContainingIgnoreCase(String title);
-    List<Film> findAllByCategories_NameContainingIgnoreCase(String categoryName);
-    List<Film> findAllByRatingContainingIgnoreCase(String rating);
-    List<Film> findAllByReleaseYear(Year releaseYear);
+    @Query("SELECT f FROM Film f " +
+            "JOIN f.categories c " +
+            "WHERE (:title IS NULL OR LOWER(f.title) LIKE LOWER(CONCAT('%', :title, '%'))) " +
+            "AND (:categoryName IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :categoryName, '%'))) " +
+            "AND (:rating IS NULL OR LOWER(f.rating) = LOWER(:rating)) " +
+            "AND (:releaseYear IS NULL OR f.releaseYear = :releaseYear)")
+    List<Film> findFilmsByFilters(@Param("title") String title,
+                                  @Param("categoryName") String categoryName,
+                                  @Param("rating") String rating,
+                                  @Param("releaseYear") Year releaseYear
+//                                  , Pageable pageable
+    );
 
-    List<Film> findAllByTitleContainingIgnoreCaseAndCategories_NameContainingIgnoreCase(String title, String categoryName);
-    List<Film> findAllByTitleContainingIgnoreCaseAndRatingContainingIgnoreCase(String title, String rating);
-    List<Film> findAllByTitleContainingIgnoreCaseAndReleaseYear(String title, Year releaseYear);
 
-    List<Film> findAllByCategories_NameContainingIgnoreCaseAndRatingContainingIgnoreCase(String categoryName, String rating);
-    List<Film> findAllByCategories_NameContainingIgnoreCaseAndReleaseYear(String categoryName, Year releaseYear);
-
-    List<Film> findAllByRatingContainingIgnoreCaseAndReleaseYear(String rating, Year releaseYear);
-
-    List<Film> findAllByTitleContainingIgnoreCaseAndCategories_NameContainingIgnoreCaseAndRatingContainingIgnoreCase(String title, String categoryName, String rating);
-    List<Film> findAllByTitleContainingIgnoreCaseAndCategories_NameContainingIgnoreCaseAndReleaseYear(String title, String categoryName, Year releaseYear);
-    List<Film> findAllByTitleContainingIgnoreCaseAndRatingContainingIgnoreCaseAndReleaseYear(String title, String rating, Year releaseYear);
-    List<Film> findAllByCategories_NameContainingIgnoreCaseAndRatingContainingIgnoreCaseAndReleaseYear(String categoryName, String rating, Year releaseYear);
-
-    List<Film> findAllByTitleContainingIgnoreCaseAndCategories_NameContainingIgnoreCaseAndRatingContainingIgnoreCaseAndReleaseYear(String title, String categoryName, String rating, Year releaseYear);
+    Pageable pageOfFive = PageRequest.of(0, 5);
+    Pageable secondPage = PageRequest.of(1, 5);
 }
