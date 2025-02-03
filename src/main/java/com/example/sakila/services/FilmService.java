@@ -4,7 +4,7 @@ import com.example.sakila.dto.input.FilmInput;
 import com.example.sakila.entities.Category;
 import com.example.sakila.entities.Film;
 import com.example.sakila.repositories.ActorRepository;
-//import com.example.sakila.repositories.CategoryRepository;
+import com.example.sakila.repositories.CategoryRepository;
 import com.example.sakila.repositories.FilmRepository;
 import com.example.sakila.repositories.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +23,18 @@ public class FilmService {
     private final FilmRepository filmRepository;
     private final ActorRepository actorRepository;
     private final LanguageRepository languageRepository;
-//    private final CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
     public FilmService(FilmRepository filmRepository,
                        ActorRepository actorRepository,
-                       LanguageRepository languageRepository
-//            ,
-//                       CategoryRepository categoryRepository
+                       LanguageRepository languageRepository,
+                       CategoryRepository categoryRepository
     ){
         this.filmRepository = filmRepository;
         this.actorRepository = actorRepository;
         this.languageRepository = languageRepository;
-//        this.categoryRepository = categoryRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public Optional<Film> getFilmById(Short id){
@@ -77,17 +76,18 @@ public class FilmService {
             film.setLanguage(movieLanguage);
         }
 
-//        //WHY IS THIS ASKING TO MAKE METHOD THROWABLE
-//        if (input.getGenre() != null){
-//            final var movieGenre = categoryRepository
-//                    .findById(input.getGenre())
-//                    .orElseThrow(()-> new ResponseStatusException(
-//                    HttpStatus.BAD_REQUEST,
-//                    String.format("A Genre with the id %d does not exist", input.getGenre())
-//            ));
-//            film.setGenre(movieGenre);
-//            //NOT LETTING ME SET GENRE WITHOUT CASTING THE ARGUMENT??
-//        }
+        if (input.getGenre() != null){
+            final var movieGenre = input.getGenre().stream().map(
+                    genreID -> categoryRepository
+                    .findById(genreID)
+                    .orElseThrow(()-> new ResponseStatusException(
+                            HttpStatus.BAD_REQUEST,
+                            String.format("A Genre with the id %d does not exist", genreID))
+                    ))
+                    .collect(Collectors.toCollection(ArrayList::new));
+                    ;
+            film.setGenre(movieGenre);
+        }
 
         if (input.getActors() != null){
             final var actors = input.getActors()

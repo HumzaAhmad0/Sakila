@@ -24,5 +24,10 @@ public class FilmInput {
     @Pattern(regexp = "^(G|PG|PG-13|R|NC-17)$")
     private String rating;
     private List<Short> actors;
-    private Byte genre;
+    private List<Byte> genre;
+
+//    @DecimalMin(value = "0.00", inclusive = true)
+//    @DecimalMax(value = "100.00", inclusive = true)
+//    @Digits(integer = 3, fraction = 2)
+//    private Float score;
 }

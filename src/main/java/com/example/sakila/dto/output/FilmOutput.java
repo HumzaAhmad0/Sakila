@@ -22,7 +22,8 @@ public class FilmOutput {
     private Short movieLength;
     private String rating;
     private List<PartialActorOutput> cast;
-    private Category genre;
+    private List<PartialCategoryOutput> genre;
+    private Float score;
 
     public static FilmOutput from(Film film){
         return new FilmOutput(
@@ -36,9 +37,13 @@ public class FilmOutput {
                 film.getCast()
                         .stream()
                         .map(PartialActorOutput::from)
-                        .toList()
-                ,
+                        .toList(),
                 film.getGenre()
+                        .stream()
+                        .map(PartialCategoryOutput::from)
+                        .toList(),
+                film.getScore()
+
         );
     }
 }

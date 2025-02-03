@@ -1,6 +1,9 @@
 package com.example.sakila.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,13 +50,15 @@ public class Film {
     )
     private List<Actor> cast;
 
-    @ManyToOne
-//    @JoinColumn(name = "category_id")
+    @ManyToMany
     @JoinTable(
             name = "film_category",
             joinColumns = {@JoinColumn(name = "film_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id")}
     )
-    private Category genre;
+    private List<Category> genre;
+
+    @Column(name = "film_score")
+    private Float score;
 
 }
