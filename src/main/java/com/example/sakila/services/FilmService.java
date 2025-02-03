@@ -64,6 +64,8 @@ public class FilmService {
         if (input.getMovieLength() != null) film.setMovieLength(input.getMovieLength());
         if (input.getRating() != null) film.setRating(input.getRating());
         if (input.getScore() != null) film.setScore(input.getScore());
+        if (input.getRentalRate() != null) film.setRentalRate(input.getRentalRate());
+        if (input.getRentalDuration() != null) film.setRentalDuration(input.getRentalDuration());
 
         if (input.getLanguage() != null){
             final var movieLanguage = languageRepository

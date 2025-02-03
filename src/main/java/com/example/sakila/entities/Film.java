@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Digits;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 
 import java.time.Year;
 import java.util.List;
@@ -60,5 +61,14 @@ public class Film {
 
     @Column(name = "film_score")
     private Float score;
+
+    @Column(name = "rental_rate")
+    private Float rentalRate;
+    @Column(name = "rental_duration")
+    private Byte rentalDuration;
+
+    @Formula("concat(rental_rate, ' for ', rental_duration, ' weeks')")
+    @Setter(AccessLevel.NONE)
+    private String rental;
 
 }

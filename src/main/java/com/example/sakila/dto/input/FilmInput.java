@@ -18,16 +18,30 @@ public class FilmInput {
 
     @NotNull(groups = {ValidationGroup.Put.class, ValidationGroup.Post.class})
     //@Positive
+    @Min(value = 1)
     private Byte language;
     private Short movieLength;
 
     @Pattern(regexp = "^(G|PG|PG-13|R|NC-17)$")
     private String rating;
     private List<Short> actors;
+
+    //maybe have a validation?
     private List<Byte> genre;
 
     @DecimalMin(value = "0.00", inclusive = true)
     @DecimalMax(value = "100.00", inclusive = true)
     @Digits(integer = 3, fraction = 2)
     private Float score;
+
+    @NotNull(groups = {ValidationGroup.Put.class, ValidationGroup.Post.class})
+    @DecimalMin(value = "0.00", inclusive = true)
+//    @DecimalMax(value = "100.00", inclusive = true)
+    // issue with: out of range above 99.99
+    @Digits(integer = 3, fraction = 2)
+    private Float rentalRate;
+
+    @NotNull(groups = {ValidationGroup.Put.class, ValidationGroup.Post.class})
+    @Min(value = 1)
+    private Byte rentalDuration;
 }

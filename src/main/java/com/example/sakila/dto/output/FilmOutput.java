@@ -24,6 +24,9 @@ public class FilmOutput {
     private List<PartialActorOutput> cast;
     private List<PartialCategoryOutput> genre;
     private Float score;
+    private Float rentalRate;
+    private Byte rentalDuration;
+    private String rental;
 
     public static FilmOutput from(Film film){
         return new FilmOutput(
@@ -42,8 +45,11 @@ public class FilmOutput {
                         .stream()
                         .map(PartialCategoryOutput::from)
                         .toList(),
-                film.getScore()
-
+                film.getScore(),
+                film.getRentalRate(),
+                film.getRentalDuration(),
+                //for some reason it shows the previous un-updated one, but it does update properly
+                film.getRental()
         );
     }
 }
