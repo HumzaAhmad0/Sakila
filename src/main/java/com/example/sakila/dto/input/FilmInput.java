@@ -26,8 +26,8 @@ public class FilmInput {
     private List<Short> actors;
     private List<Byte> genre;
 
-//    @DecimalMin(value = "0.00", inclusive = true)
-//    @DecimalMax(value = "100.00", inclusive = true)
-//    @Digits(integer = 3, fraction = 2)
-//    private Float score;
+    @DecimalMin(value = "0.00", inclusive = true)
+    @DecimalMax(value = "100.00", inclusive = true)
+    @Digits(integer = 3, fraction = 2)
+    private Float score;
 }

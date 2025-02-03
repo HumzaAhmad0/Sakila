@@ -1,7 +1,6 @@
 package com.example.sakila.services;
 
 import com.example.sakila.dto.input.FilmInput;
-import com.example.sakila.entities.Category;
 import com.example.sakila.entities.Film;
 import com.example.sakila.repositories.ActorRepository;
 import com.example.sakila.repositories.CategoryRepository;
@@ -64,6 +63,7 @@ public class FilmService {
         if (input.getReleaseYear() != null) film.setReleaseYear(input.getReleaseYear());
         if (input.getMovieLength() != null) film.setMovieLength(input.getMovieLength());
         if (input.getRating() != null) film.setRating(input.getRating());
+        if (input.getScore() != null) film.setScore(input.getScore());
 
         if (input.getLanguage() != null){
             final var movieLanguage = languageRepository
@@ -72,7 +72,6 @@ public class FilmService {
                             HttpStatus.BAD_REQUEST,
                             String.format("A language with the id %d does not exist", input.getLanguage())
                     ));
-
             film.setLanguage(movieLanguage);
         }
 
@@ -82,10 +81,10 @@ public class FilmService {
                     .findById(genreID)
                     .orElseThrow(()-> new ResponseStatusException(
                             HttpStatus.BAD_REQUEST,
-                            String.format("A Genre with the id %d does not exist", genreID))
-                    ))
+                            String.format("A Genre with the id %d does not exist", genreID)
+
+                    )))
                     .collect(Collectors.toCollection(ArrayList::new));
-                    ;
             film.setGenre(movieGenre);
         }
 
@@ -101,6 +100,7 @@ public class FilmService {
                     .collect(Collectors.toCollection(ArrayList::new));
             film.setCast(actors);
         }
+
     }
 
     public void deleteFilm(Short id){
