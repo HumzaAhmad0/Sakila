@@ -68,4 +68,7 @@ public class Film {
     @Setter(AccessLevel.NONE)
     private String rental;
 
+    public String getRental(){
+        return rentalRate + " for " + rentalDuration + " weeks";
+    }
 }

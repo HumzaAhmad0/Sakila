@@ -46,7 +46,6 @@ public class FilmOutput {
                 film.getScore(),
                 film.getRentalRate(),
                 film.getRentalDuration(),
-                //for some reason it shows the previous un-updated one, but it does update properly
                 film.getRental()
         );
     }
