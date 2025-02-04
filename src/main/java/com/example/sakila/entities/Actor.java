@@ -1,9 +1,7 @@
 package com.example.sakila.entities;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Formula;
 
 import java.util.List;
@@ -12,6 +10,7 @@ import java.util.List;
 @Table(name = "actor")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Actor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,4 +42,14 @@ public class Actor {
     }
 
 
+    public Actor(String firstName, String lastName){
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+    public Actor(Short id,String firstName, String lastName){
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }
+

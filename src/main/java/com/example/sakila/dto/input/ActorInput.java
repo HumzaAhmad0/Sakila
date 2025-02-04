@@ -4,9 +4,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import com.example.sakila.dto.ValidationGroup.*;
+import lombok.Setter;
 
 import java.util.List;
 @Getter
+@Setter
 public class ActorInput {
     @NotNull(groups = {Put.class, Post.class}, message = "First Name cannot be null")
     @Size(min = 1, max = 45, message = "First Name must be between 1-45 characters")
