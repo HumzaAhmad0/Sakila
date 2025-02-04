@@ -21,10 +21,5 @@ public interface FilmRepository extends JpaRepository<Film, Short> {
                                   @Param("categoryName") String categoryName,
                                   @Param("rating") String rating,
                                   @Param("releaseYear") Year releaseYear
-//                                  , Pageable pageable
     );
-
-
-    Pageable pageOfFive = PageRequest.of(0, 5);
-    Pageable secondPage = PageRequest.of(1, 5);
 }

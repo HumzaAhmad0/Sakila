@@ -7,6 +7,8 @@ import com.example.sakila.repositories.CategoryRepository;
 import com.example.sakila.repositories.FilmRepository;
 import com.example.sakila.repositories.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,8 +45,19 @@ public class FilmService {
         return filmRepository.findById(id);
     }
 
-    public List<Film> listFilms(String title, String categoryName, String rating, Year year){
-        return filmRepository.findFilmsByFilters(title,categoryName,rating,year);
+    public List<Film> listFilms(String title, String categoryName, String rating, Year year, Integer sortByScore){
+        List<Film> films = filmRepository.findFilmsByFilters(title,categoryName,rating,year);
+        // sortByScore 1 = show top 5
+        // sortByScore 1 = show bottom 5
+        if (sortByScore == 1){
+            films.sort(Comparator.comparing(Film::getScore).reversed());
+            films = films.subList(0, 5);
+        }
+        if (sortByScore == 2){
+            films.sort(Comparator.comparing(Film::getScore));
+            films = films.subList(0, 5);
+        }
+        return films;
     }
 
     public Film createFilm(FilmInput input){

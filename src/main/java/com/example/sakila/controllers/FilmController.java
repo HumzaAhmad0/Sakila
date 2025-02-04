@@ -29,9 +29,10 @@ public class FilmController {
     public List<FilmOutput> retrieveMovies(@RequestParam(required = false) String title,
                                            @RequestParam(required = false) String categoryName,
                                            @RequestParam(required = false) String rating,
-                                           @RequestParam(required = false) Year year
+                                           @RequestParam(required = false) Year year,
+                                           @RequestParam(required = false) Integer sortByScore
     ){
-        return filmService.listFilms(title,categoryName,rating,year)
+        return filmService.listFilms(title, categoryName, rating, year, sortByScore )
                 .stream()
                 .map(FilmOutput::from)
                 .toList();
