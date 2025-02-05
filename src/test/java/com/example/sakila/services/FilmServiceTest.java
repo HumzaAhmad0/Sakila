@@ -116,6 +116,7 @@ public class FilmServiceTest {
         when(mocklanguageRepository.findById(input.getLanguage())).thenReturn(Optional.empty());
         Assertions.assertThrowsExactly(ResponseStatusException.class, ()-> filmService.updateFilm(id,input), "response to wrong language not working");
     }
+
     @Test
     public void testUpdateFilmWithIncorrectGenre(){
         FilmInput input = new FilmInput();
@@ -137,10 +138,16 @@ public class FilmServiceTest {
     }
 
     @Test
-    public void testDeleteFilm(){
+    public void testDeleteFilmWithInvalidId(){
         Short id = (short)3;
         when(mockfilmRepository.existsById(id)).thenReturn(false);
         Assertions.assertThrowsExactly(ResponseStatusException.class, ()-> filmService.deleteFilm(id),"deleting film id message not working");
-
+    }
+    @Test
+    public void testDeleteFilm(){
+        Short id = (short)3;
+        when(mockfilmRepository.existsById(id)).thenReturn(true);
+        filmService.deleteFilm(id);
+        verify(mockfilmRepository, times(1)).deleteById(id);
     }
 }

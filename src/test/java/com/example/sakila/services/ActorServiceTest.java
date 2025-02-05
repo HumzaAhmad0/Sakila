@@ -145,10 +145,18 @@ public class ActorServiceTest {
     }
 
     @Test
-    public void testDeleteActor(){
+    public void testDeleteActorInvalidId(){
         Short id = (short)3;
 
         when(mockActorRepo.existsById(id)).thenReturn(false);
         Assertions.assertThrowsExactly(ResponseStatusException.class, () -> actorService.deleteActor(id), "delete not working");
+    }
+    @Test
+    public void testDeleteActor(){
+        Short id = (short)3;
+
+        when(mockActorRepo.existsById(id)).thenReturn(true);
+        actorService.deleteActor(id);
+        verify(mockActorRepo, times(1)).deleteById(id);
     }
 }
