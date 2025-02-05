@@ -3,11 +3,13 @@ package com.example.sakila.dto.input;
 import com.example.sakila.dto.ValidationGroup;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Year;
 import java.util.List;
 
 @Getter
+@Setter
 public class FilmInput {
     @NotNull(groups = {ValidationGroup.Put.class, ValidationGroup.Post.class}, message = "Title cannot be null")
     @Size(min = 1, max = 128, message = "Title must be between 1-128 characters")

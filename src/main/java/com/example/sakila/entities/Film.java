@@ -77,4 +77,15 @@ public class Film {
     public Film(Short id){
         this.id = id;
     }
+    public Film(Short id, String title, List<Category> categories, String rating, Year releaseYear, Float score){
+        this.id = id;
+        this.title = title;
+        this.categories = categories;
+        this.rating = rating;
+        this.releaseYear = releaseYear;
+        this.score = score;
+    }
+    public Film(String title){
+        this.title = title;
+    }
 }

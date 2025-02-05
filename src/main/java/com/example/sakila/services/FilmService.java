@@ -51,11 +51,11 @@ public class FilmService {
         // sortByScore 1 = show bottom 5
         if (sortByScore == 1){
             films.sort(Comparator.comparing(Film::getScore).reversed());
-            films = films.subList(0, 5);
+            films = films.subList(0, Math.min(films.size(), 5));
         }
         if (sortByScore == 2){
             films.sort(Comparator.comparing(Film::getScore));
-            films = films.subList(0, 5);
+            films = films.subList(0, Math.min(films.size(), 5));
         }
         return films;
     }

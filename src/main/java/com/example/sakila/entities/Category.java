@@ -2,6 +2,7 @@ package com.example.sakila.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ import java.util.List;
 @Table(name = "category")
 @Getter
 //@Setter
+@NoArgsConstructor
 public class Category {
 
     @Id
@@ -26,4 +28,9 @@ public class Category {
             inverseJoinColumns = @JoinColumn(name = "film_id")
     )
     private List<Film> films;
+
+    public Category(String name){
+        this.name = name;
+    }
+
 }

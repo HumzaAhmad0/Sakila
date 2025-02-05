@@ -32,6 +32,16 @@ public class ActorServiceTest {
     }
 
     @Test
+    public void testReturnActorByID(){
+        Short id = 3;
+        Actor actor = new Actor((short)3, "testing2", "sam");
+
+        when(mockActorRepo.findById(id)).thenReturn(Optional.of(actor));
+        Assertions.assertEquals(Optional.of(actor), actorService.getActorById(id), "returning actor by id not working");
+    }
+    //add test for wrong id
+
+    @Test
     public void testReturnAllActors(){
         List<Actor> actors = new ArrayList<>();
         actors.add(new Actor("dave", "testing"));
@@ -40,16 +50,6 @@ public class ActorServiceTest {
 
         when(mockActorRepo.findAll()).thenReturn(actors);
         Assertions.assertEquals(actors, actorService.listActors(), "Return all actors not working");
-    }
-
-    //add test for wrong id
-    @Test
-    public void testReturnActorByID(){
-        Short id = 3;
-        Actor actor = new Actor((short)3, "testing2", "sam");
-
-        when(mockActorRepo.findById(id)).thenReturn(Optional.of(actor));
-        Assertions.assertEquals(Optional.of(actor), actorService.getActorById(id), "returning actor by id not working");
     }
 
     @Test
@@ -85,9 +85,36 @@ public class ActorServiceTest {
     public void testUpdateActorFromInputOnlyNames(){
         String fName = "t";
         String lName = "L";
+        //need to add the id check
         Actor savedActor = new Actor(fName.toUpperCase(),lName.toUpperCase());
 
         Assertions.assertEquals("T L", savedActor.getFullName(), "updating new actor not working");
+    }
+    @Test
+    public void testUpdateActorById(){
+        Short id = (short)2;
+        Actor oldActor = new Actor(id);
+        oldActor.setFirstName("t".toUpperCase());
+        oldActor.setLastName("l".toUpperCase());
+        ActorInput input = new ActorInput();
+        input.setFirstName("P".toUpperCase());
+
+        when(mockActorRepo.findById(id)).thenReturn(Optional.of(oldActor));
+        when(mockActorRepo.save(any(Actor.class))).then(returnsFirstArg());
+        Actor updatedActor = actorService.updateActor(id,input);
+
+        Assertions.assertEquals("P",updatedActor.getFirstName(), "Not updating by id correctly");
+
+    }
+    @Test
+    public void testUpdateActorByInvalidId(){
+        Short id = (short)2;
+        ActorInput input = new ActorInput();
+        input.setFirstName("P".toUpperCase());
+
+        when(mockActorRepo.findById(id)).thenReturn(Optional.empty());
+        Assertions.assertThrowsExactly(ResponseStatusException.class, ()-> actorService.updateActor(id,input),"error message not shown correctly for incorrect id");
+
     }
 
     @Test
