@@ -73,7 +73,7 @@ public class FilmService {
         return filmRepository.save(film);
     }
 
-    public void updateFilmFromInput(Film film, FilmInput input){
+    private void updateFilmFromInput(Film film, FilmInput input){
         if (input.getTitle() != null) film.setTitle(input.getTitle());
         if (input.getDescription() != null) film.setDescription(input.getDescription());
         if (input.getReleaseYear() != null) film.setReleaseYear(input.getReleaseYear());
@@ -118,7 +118,6 @@ public class FilmService {
                     .collect(Collectors.toCollection(ArrayList::new));
             film.setCast(actors);
         }
-
     }
 
     public void deleteFilm(Short id){

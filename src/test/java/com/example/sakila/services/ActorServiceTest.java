@@ -82,15 +82,6 @@ public class ActorServiceTest {
     }
 
     @Test
-    public void testUpdateActorFromInputOnlyNames(){
-        String fName = "t";
-        String lName = "L";
-        //need to add the id check
-        Actor savedActor = new Actor(fName.toUpperCase(),lName.toUpperCase());
-
-        Assertions.assertEquals("T L", savedActor.getFullName(), "updating new actor not working");
-    }
-    @Test
     public void testUpdateActorById(){
         Short id = (short)2;
         Actor oldActor = new Actor(id);
@@ -115,6 +106,16 @@ public class ActorServiceTest {
         when(mockActorRepo.findById(id)).thenReturn(Optional.empty());
         Assertions.assertThrowsExactly(ResponseStatusException.class, ()-> actorService.updateActor(id,input),"error message not shown correctly for incorrect id");
 
+    }
+
+    @Test
+    public void testUpdateActorFromInputOnlyNames(){
+        String fName = "t";
+        String lName = "L";
+        //need to add the id check
+        Actor savedActor = new Actor(fName.toUpperCase(),lName.toUpperCase());
+
+        Assertions.assertEquals("T L", savedActor.getFullName(), "updating new actor not working");
     }
 
     @Test
