@@ -2,6 +2,7 @@ package com.example.sakila.services;
 
 import com.example.sakila.dto.input.ActorInput;
 import com.example.sakila.entities.Actor;
+import com.example.sakila.entities.Film;
 import com.example.sakila.repositories.ActorRepository;
 import com.example.sakila.repositories.FilmRepository;
 import org.assertj.core.internal.Shorts;
@@ -81,10 +82,45 @@ public class ActorServiceTest {
     }
 
     @Test
+    public void testUpdateActorFromInputOnlyNames(){
+        String fName = "t";
+        String lName = "L";
+        Actor savedActor = new Actor(fName.toUpperCase(),lName.toUpperCase());
+
+        Assertions.assertEquals("T L", savedActor.getFullName(), "updating new actor not working");
+    }
+
+    @Test
+    public void testUpdateActorFromInputWithFilms(){
+        Short idOne = (short)3;
+        Film filmOne = new Film(idOne);
+        Short idTwo = (short)2;
+        Film filmTwo = new Film(idTwo);
+
+        List<Short> filmIds = new ArrayList<>();
+        filmIds.add(idOne);
+        filmIds.add(idTwo);
+
+        ActorInput actorInput = new ActorInput();
+        actorInput.setFilms(filmIds);
+
+        Actor actor = new Actor("t", "l");
+
+        when(mockFilmRepo.findById(idOne)).thenReturn(Optional.of(filmOne));
+        when(mockFilmRepo.findById(idTwo)).thenReturn(Optional.of(filmTwo));
+        Actor savedActor = actorService.createActor(actorInput);
+
+        Assertions.assertEquals(2,savedActor.getFilms().size(), "Films not being added correctly");
+        Assertions.assertTrue(savedActor.getFilms().contains(filmOne), "film id 1 not being added");
+        Assertions.assertTrue(savedActor.getFilms().contains(filmTwo), "film id 1 not being added");
+
+    }
+
+    @Test
     public void testDeleteActor(){
         Short id = (short)3;
 
-        when(mockActorRepo.existsById(id)).thenReturn(true);
+        when(mockActorRepo.existsById(id)).thenReturn(false);
         Assertions.assertThrowsExactly(ResponseStatusException.class, () -> actorService.deleteActor(id), "delete not working");
     }
 }

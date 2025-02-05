@@ -51,5 +51,8 @@ public class Actor {
         this.firstName = firstName;
         this.lastName = lastName;
     }
+    public Actor(List<Film> films){
+        this.films = films;
+    }
 }
 

@@ -3,6 +3,7 @@ package com.example.sakila.entities;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Formula;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Table(name = "film")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Film {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,5 +72,9 @@ public class Film {
 
     public String getRental(){
         return rentalRate + " for " + rentalDuration + " weeks";
+    }
+
+    public Film(Short id){
+        this.id = id;
     }
 }
