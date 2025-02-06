@@ -71,7 +71,7 @@ public class ActorControllerTest {
 
     @Test
     public void testGetSpecificActor(){
-        Short id = (short)2;
+        Short id = 2;
 
         Actor specifiedActor = new Actor(id);
         specifiedActor.setFilms(Collections.emptyList());
@@ -138,7 +138,7 @@ public class ActorControllerTest {
 
     @Test
     public void testUpdateActor() {
-        Short id = (short) 2;
+        Short id = 2;
         ActorInput input = new ActorInput();
         input.setFirstName("luke");
         input.setFilms(Collections.emptyList());
@@ -159,14 +159,14 @@ public class ActorControllerTest {
 
     @Test
     public void testDeleteActor(){
-        Short id = (short)2;
+        Short id = 2;
 
         actorController.deleteActor(id);
         verify(mockActorService, times(1)).deleteActor(id);
     }
     @Test
     public void testDeleteActorWrongId(){
-        Short id = (short)2;
+        Short id = 2;
 
         doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(mockActorService).deleteActor(id);
 

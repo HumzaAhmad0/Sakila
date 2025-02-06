@@ -27,7 +27,11 @@ public class ActorService {
     }
 
     public Optional<Actor> getActorById(Short id){
-        return actorRepository.findById(id);
+        Optional<Actor> actor= actorRepository.findById(id);
+        if (actor.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return actor;
     }
 
     public List<Actor> listActors(){

@@ -46,6 +46,11 @@ public class Actor {
         this.firstName = firstName;
         this.lastName = lastName;
     }
+    public Actor(String firstName, String lastName, List<Film> films){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.films = films;
+    }
     public Actor(Short id,String firstName, String lastName, List<Film> films){
         this.id = id;
         this.firstName = firstName;
