@@ -29,7 +29,7 @@ public class ActorServiceTest {
     }
 
     @Test
-    public void testReturnActorByID(){
+    public void testReturnActorById(){
         Short id = 3;
         Actor actor = new Actor(id, "testing2", "sam");
 
@@ -46,8 +46,9 @@ public class ActorServiceTest {
             Assertions.assertEquals(Optional.of(actor), returnedActor, "returning actor by id not working");
         }
     }
+
     @Test
-    public void testReturnActorByWrongID(){
+    public void testReturnActorByWrongId(){
         Short id = 3;
 
         when(mockActorRepo.findById(id)).thenReturn(Optional.empty());
@@ -206,6 +207,7 @@ public class ActorServiceTest {
         when(mockActorRepo.existsById(id)).thenReturn(false);
         Assertions.assertThrowsExactly(ResponseStatusException.class, () -> actorService.deleteActor(id), "delete not working");
     }
+
     @Test
     public void testDeleteActor(){
         Short id = 3;
