@@ -1,10 +1,7 @@
 package com.example.sakila.entities;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Formula;
 
 import java.time.Year;
@@ -27,7 +24,6 @@ public class Film {
 
     @Column(name = "description")
     private String description;
-
     @Column(name = "release_year")
     private Year releaseYear;
 
@@ -87,5 +83,21 @@ public class Film {
     }
     public Film(String title){
         this.title = title;
+    }
+
+
+    public Film(Short id,String title, String description, Year releaseYear, Language language, Short movieLength, String rating, List<Actor> cast, List<Category> categories, Float score, Float rentalRate, Byte rentalDuration){
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.releaseYear = releaseYear;
+        this.language = language;
+        this.movieLength = movieLength;
+        this.rating =  rating;
+        this.cast = cast;
+        this.categories = categories;
+        this.score = score;
+        this.rentalRate = rentalRate;
+        this.rentalDuration = rentalDuration;
     }
 }

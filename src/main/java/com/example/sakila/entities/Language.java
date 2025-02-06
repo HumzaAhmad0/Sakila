@@ -15,5 +15,7 @@ public class Language {
     @Column(name = "name")
     private String name;
 
-
+    public Language(Byte id){
+        this.id = id;
+    }
 }
