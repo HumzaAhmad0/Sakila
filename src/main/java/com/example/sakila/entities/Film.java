@@ -67,7 +67,7 @@ public class Film {
     private String rental;
 
     public String getRental(){
-        return rentalRate + " for " + rentalDuration + " weeks";
+        return "£"+rentalRate + " for " + rentalDuration + " weeks";
     }
 
     public Film(Short id){

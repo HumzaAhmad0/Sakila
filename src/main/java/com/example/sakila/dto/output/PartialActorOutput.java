@@ -11,6 +11,8 @@ public class PartialActorOutput {
     private String fullName;
 
     public static PartialActorOutput from(Actor actor){
-        return new PartialActorOutput(actor.getId(), actor.getFullName());
+        return new PartialActorOutput(
+                actor.getId(),
+                actor.getFullName());
     }
 }

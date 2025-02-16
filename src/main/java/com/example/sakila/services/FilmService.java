@@ -49,6 +49,8 @@ public class FilmService {
         List<Film> films = filmRepository.findFilmsByFilters(title,categoryName,rating,year);
         // sortByScore 1 = show top 5
         // sortByScore 1 = show bottom 5
+        if (sortByScore == null) return films;
+
         if (sortByScore == 1){
             films.sort(Comparator.comparing(Film::getScore).reversed());
             films = films.subList(0, Math.min(films.size(), 5));

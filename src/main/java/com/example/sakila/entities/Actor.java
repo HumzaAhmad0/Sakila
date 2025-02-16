@@ -65,5 +65,10 @@ public class Actor {
     public Actor(Short id){
         this.id = id;
     }
+
+    public Actor(Short id, String fullName){
+        this.id = id;
+        this.fullName = fullName;
+    }
 }
 

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class ActorOutputTest {
 
     @Test
-    public void testFilmFromFilm(){
+    public void testFilmOutputFromFilm(){
         Film film = new Film(
                 (short)1,
                 "a",

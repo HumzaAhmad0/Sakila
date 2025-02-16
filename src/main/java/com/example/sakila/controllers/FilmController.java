@@ -16,6 +16,7 @@ import java.time.Year;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 public class FilmController {
 
     private final FilmService filmService;
