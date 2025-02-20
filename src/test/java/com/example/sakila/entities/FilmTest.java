@@ -19,7 +19,7 @@ public class FilmTest {
             Assertions.assertNull(newFilm.getMovieLength(), "Movie length year should be null");
             Assertions.assertNull(newFilm.getRating(), "Rating should be null");
             Assertions.assertNull(newFilm.getScore(), "Score should be null");
-            Assertions.assertEquals("null for null weeks", newFilm.getRental(), "Default actor should have 2 null rentals");
+            Assertions.assertEquals("£null for null weeks", newFilm.getRental(), "Default actor should have 2 null rentals");
         }
     }
 
@@ -45,7 +45,7 @@ public class FilmTest {
         Assertions.assertEquals(50.2F , newFilm.getScore(), "score is not 50.2");
         Assertions.assertEquals(10.99F , newFilm.getRentalRate(), "rental rate is not 10.99");
         Assertions.assertEquals((byte) 3 , newFilm.getRentalDuration(), "rental duration is not 3");
-        Assertions.assertEquals("10.99 for 3 weeks", newFilm.getRental(), " film rental NOT combining rental rate and duration ");
+        Assertions.assertEquals("£10.99 for 3 weeks", newFilm.getRental(), " film rental NOT combining rental rate and duration ");
         }
     }
 }

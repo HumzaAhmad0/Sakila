@@ -42,7 +42,11 @@ public class FilmService {
     }
 
     public Optional<Film> getFilmById(Short id){
-        return filmRepository.findById(id);
+        Optional<Film> film = filmRepository.findById(id);
+        if (film.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Film not found");
+        }
+        return film;
     }
 
     public List<Film> listFilms(String title, String categoryName, String rating, Year year, Integer sortByScore){
